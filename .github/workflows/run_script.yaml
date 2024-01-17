@@ -45,7 +45,7 @@ jobs:
       - name: Send End notification
         run: |
           curl --get \
-              --data-urlencode 'chat_id=${{vars.TELEGRAM_DEPLOY_NOTICE_RECIPIENT_ID}}' \
+              --data-urlencode 'chat_id=${{secrets.TELEGRAM_DEPLOY_NOTICE_RECIPIENT_ID}}' \
               --data-urlencode "text=✅SUCCESS! AMFI Data Processing" \
               https://api.telegram.org/bot${{secrets.TELEGRAM_BOT_TOKEN}}/sendMessage
 
@@ -57,6 +57,6 @@ jobs:
       - name: Sending the failure Telegram notification
         run: |
           curl --get \
-          --data-urlencode 'chat_id=${{vars.TELEGRAM_DEPLOY_NOTICE_RECIPIENT_ID}}' \
+          --data-urlencode 'chat_id=${{secrets.TELEGRAM_DEPLOY_NOTICE_RECIPIENT_ID}}' \
           --data-urlencode "text=🆘FAILED! AMFI Data Processing" \
           https://api.telegram.org/bot${{secrets.TELEGRAM_BOT_TOKEN}}/sendMessage
