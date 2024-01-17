@@ -41,11 +41,12 @@ jobs:
           TEMP_DATA_DIR: temp_data  # Set environment variables as needed
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # You might need this for access
           MONGO_URI: ${{ secrets.MONGO_CONN_STRING }}
-          DB_NAME: ${{ env.DB_NAME }}
-          COLLECTION_NAME: ${{ env.COLLECTION_NAME }}
+          DB_NAME: ${{ vars.DB_NAME }}
+          COLLECTION_NAME: ${{ vars.COLLECTION_NAME }}
           DROPBOX_TOKEN: ${{ secrets.DROPBOX_ACCESS_KEY }}
 
       - name: Send End notification
+        if: success()
         run: |
           curl --get \
               --data-urlencode 'chat_id=${{secrets.TELEGRAM_DEPLOY_NOTICE_RECIPIENT_ID}}' \
