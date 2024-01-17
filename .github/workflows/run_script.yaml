@@ -1,0 +1,62 @@
+name: Scheduled Workflow - AMFI NAV Processing
+
+on:
+  schedule:
+    # Runs at 11:10 PM IST which is 5:40 PM UTC
+    - cron: '40 17 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Send Start Notification
+        run: |
+          curl --get \
+              --data-urlencode 'chat_id=${{secrets.TELEGRAM_DEPLOY_NOTICE_RECIPIENT_ID}}' \
+              --data-urlencode "text=🚀Start! AMFI Data Processing" \
+              https://api.telegram.org/bot${{secrets.TELEGRAM_BOT_TOKEN}}/sendMessage
+
+      - name: Set up MongoDB PEM file
+        run: |
+          echo "${{ secrets.MONGO_PEM_BASE64 }}" | base64 -d > amfi-nav-prod-cl1-script-runner.pem
+          chmod 600 amfi-nav-prod-cl1-script-runner.pem
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'  # Use the desired Python version
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt  # Adjust as needed
+
+      - name: Run main.py
+        run: python main.py
+        env:
+          TEMP_DATA_DIR: temp_data  # Set environment variables as needed
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # You might need this for access
+          MONGO_URI: ${{ secrets.MONGO_CONN_STRING }}
+          DB_NAME: ${{ env.DB_NAME }}
+          COLLECTION_NAME: ${{ env.COLLECTION_NAME }}
+          DROPBOX_TOKEN: ${{ secrets.DROPBOX_ACCESS_KEY }}
+
+      - name: Send End notification
+        run: |
+          curl --get \
+              --data-urlencode 'chat_id=${{vars.TELEGRAM_DEPLOY_NOTICE_RECIPIENT_ID}}' \
+              --data-urlencode "text=✅SUCCESS! AMFI Data Processing" \
+              https://api.telegram.org/bot${{secrets.TELEGRAM_BOT_TOKEN}}/sendMessage
+
+  debug:
+    needs: build
+    runs-on: ubuntu-latest
+    if: ${{ failure() }}
+    steps:
+      - name: Sending the failure Telegram notification
+        run: |
+          curl --get \
+          --data-urlencode 'chat_id=${{vars.TELEGRAM_DEPLOY_NOTICE_RECIPIENT_ID}}' \
+          --data-urlencode "text=🆘FAILED! AMFI Data Processing" \
+          https://api.telegram.org/bot${{secrets.TELEGRAM_BOT_TOKEN}}/sendMessage
