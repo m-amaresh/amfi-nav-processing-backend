@@ -24,8 +24,8 @@ jobs:
 
       - name: Set up MongoDB PEM file
         run: |
-          echo "${{ secrets.MONGO_PEM_BASE64 }}" | base64 -d > amfi-nav-prod-cl1-script-runner.pem
-          chmod 600 amfi-nav-prod-cl1-script-runner.pem
+          echo "${{ secrets.MONGO_PEM_BASE64 }}" | base64 -d > amfi-prod-script-runner.pem
+          chmod 600 amfi-prod-script-runner.pem
 
       - name: Set up Python
         uses: actions/setup-python@v5
