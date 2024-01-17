@@ -2,7 +2,7 @@ name: Scheduled Workflow - AMFI NAV Processing
 
 on:
   schedule:
-    # Runs at 11:10 PM IST which is 5:40 PM UTC
+    # Runs at 11:20 PM IST which is 5:50 PM UTC
     - cron: '50 17 * * *'
 
 jobs:
