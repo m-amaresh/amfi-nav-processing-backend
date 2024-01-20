@@ -84,7 +84,7 @@ def fetch_and_insert_data():
                             "isin_div_reinvestment": record_dict[
                                 "isin_div_reinvestment"
                             ],
-                            "scheme_name:": record_dict["scheme_name"],
+                            "scheme_name": record_dict["scheme_name"],
                             "nav_data": [
                                 {
                                     "net_asset_value": record_dict["net_asset_value"],

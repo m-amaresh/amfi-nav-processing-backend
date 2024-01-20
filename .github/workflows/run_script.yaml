@@ -4,9 +4,6 @@ on:
   schedule:
     # Runs at 11:20 PM IST which is 5:50 PM UTC
     - cron: '50 17 * * *'
-  push:
-    branches:
-      - main
 
 jobs:
   build:
