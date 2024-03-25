@@ -1,6 +1,7 @@
 name: Scheduled Workflow - AMFI NAV Processing
 
 on:
+  workflow_dispatch:
   schedule:
     # Runs at 11:20 PM IST which is 5:50 PM UTC
     - cron: '50 17 * * *'
